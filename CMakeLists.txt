@@ -48,11 +48,17 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
         # Add user sources here
         Core/Src/bsp.c
         Core/Src/lv_port_display.c
+
+        Middlewares/Third_Party/UI/images.c
+        Middlewares/Third_Party/UI/screens.c
+        Middlewares/Third_Party/UI/styles.c
+        Middlewares/Third_Party/UI/ui.c
 )
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
         # Add user defined include paths
+        Middlewares/Third_Party/UI
 )
 
 # Add project symbols (macros)

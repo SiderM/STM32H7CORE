@@ -27,6 +27,7 @@
 /* USER CODE BEGIN Includes */
 #include "lv_port_display.h"
 #include "lvgl.h"
+#include "ui.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -153,18 +154,7 @@ void LvglTask(void *argument)
 {
   /* USER CODE BEGIN LvglTask */
     lv_port_display_init();
-
-    lv_obj_t *label = lv_label_create(lv_screen_active());
-    lv_label_set_text(label, "Hello World!");
-    lv_obj_center(label);
-
-    lv_obj_t *btn = lv_btn_create(lv_screen_active());
-    lv_obj_set_size(btn, 100, 50);
-    lv_obj_center(btn);
-    lv_obj_t *label2 = lv_label_create(btn);
-    lv_obj_center(label2);
-    lv_label_set_text(label2, "Click me!");
-    lv_obj_align(btn, LV_ALIGN_CENTER, 0, -50);
+    ui_init();
     /* Infinite loop */
     for (;;) {
         osMutexAcquire(lvglMutexHandle, osWaitForever);
