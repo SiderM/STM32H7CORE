@@ -52,21 +52,21 @@
 /* Definitions for debugTask */
 osThreadId_t debugTaskHandle;
 const osThreadAttr_t debugTask_attributes = {
-  .name = "debugTask",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
+    .name = "debugTask",
+    .stack_size = 128 * 4,
+    .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for lvglTask */
 osThreadId_t lvglTaskHandle;
 const osThreadAttr_t lvglTask_attributes = {
-  .name = "lvglTask",
-  .stack_size = 2048 * 4,
-  .priority = (osPriority_t) osPriorityNormal1,
+    .name = "lvglTask",
+    .stack_size = 2048 * 4,
+    .priority = (osPriority_t) osPriorityNormal1,
 };
 /* Definitions for lvglMutex */
 osMutexId_t lvglMutexHandle;
 const osMutexAttr_t lvglMutex_attributes = {
-  .name = "lvglMutex"
+    .name = "lvglMutex"
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -75,6 +75,7 @@ const osMutexAttr_t lvglMutex_attributes = {
 /* USER CODE END FunctionPrototypes */
 
 void DebugTask(void *argument);
+
 void LvglTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -85,44 +86,43 @@ void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
   * @retval None
   */
 void MX_FREERTOS_Init(void) {
-  /* USER CODE BEGIN Init */
+    /* USER CODE BEGIN Init */
 
-  /* USER CODE END Init */
-  /* Create the mutex(es) */
-  /* creation of lvglMutex */
-  lvglMutexHandle = osMutexNew(&lvglMutex_attributes);
+    /* USER CODE END Init */
+    /* Create the mutex(es) */
+    /* creation of lvglMutex */
+    lvglMutexHandle = osMutexNew(&lvglMutex_attributes);
 
-  /* USER CODE BEGIN RTOS_MUTEX */
+    /* USER CODE BEGIN RTOS_MUTEX */
     /* add mutexes, ... */
-  /* USER CODE END RTOS_MUTEX */
+    /* USER CODE END RTOS_MUTEX */
 
-  /* USER CODE BEGIN RTOS_SEMAPHORES */
+    /* USER CODE BEGIN RTOS_SEMAPHORES */
     /* add semaphores, ... */
-  /* USER CODE END RTOS_SEMAPHORES */
+    /* USER CODE END RTOS_SEMAPHORES */
 
-  /* USER CODE BEGIN RTOS_TIMERS */
+    /* USER CODE BEGIN RTOS_TIMERS */
     /* start timers, add new ones, ... */
-  /* USER CODE END RTOS_TIMERS */
+    /* USER CODE END RTOS_TIMERS */
 
-  /* USER CODE BEGIN RTOS_QUEUES */
+    /* USER CODE BEGIN RTOS_QUEUES */
     /* add queues, ... */
-  /* USER CODE END RTOS_QUEUES */
+    /* USER CODE END RTOS_QUEUES */
 
-  /* Create the thread(s) */
-  /* creation of debugTask */
-  debugTaskHandle = osThreadNew(DebugTask, NULL, &debugTask_attributes);
+    /* Create the thread(s) */
+    /* creation of debugTask */
+    debugTaskHandle = osThreadNew(DebugTask, NULL, &debugTask_attributes);
 
-  /* creation of lvglTask */
-  lvglTaskHandle = osThreadNew(LvglTask, NULL, &lvglTask_attributes);
+    /* creation of lvglTask */
+    lvglTaskHandle = osThreadNew(LvglTask, NULL, &lvglTask_attributes);
 
-  /* USER CODE BEGIN RTOS_THREADS */
+    /* USER CODE BEGIN RTOS_THREADS */
     /* add threads, ... */
-  /* USER CODE END RTOS_THREADS */
+    /* USER CODE END RTOS_THREADS */
 
-  /* USER CODE BEGIN RTOS_EVENTS */
+    /* USER CODE BEGIN RTOS_EVENTS */
     /* add events, ... */
-  /* USER CODE END RTOS_EVENTS */
-
+    /* USER CODE END RTOS_EVENTS */
 }
 
 /* USER CODE BEGIN Header_DebugTask */
@@ -132,15 +132,14 @@ void MX_FREERTOS_Init(void) {
   * @retval None
   */
 /* USER CODE END Header_DebugTask */
-void DebugTask(void *argument)
-{
-  /* USER CODE BEGIN DebugTask */
+void DebugTask(void *argument) {
+    /* USER CODE BEGIN DebugTask */
     /* Infinite loop */
     for (;;) {
         HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
         osDelay(100);
     }
-  /* USER CODE END DebugTask */
+    /* USER CODE END DebugTask */
 }
 
 /* USER CODE BEGIN Header_LvglTask */
@@ -150,9 +149,8 @@ void DebugTask(void *argument)
 * @retval None
 */
 /* USER CODE END Header_LvglTask */
-void LvglTask(void *argument)
-{
-  /* USER CODE BEGIN LvglTask */
+void LvglTask(void *argument) {
+    /* USER CODE BEGIN LvglTask */
     lv_port_display_init();
     ui_init();
     /* Infinite loop */
@@ -162,11 +160,10 @@ void LvglTask(void *argument)
         osMutexRelease(lvglMutexHandle);
         osDelay(5);
     }
-  /* USER CODE END LvglTask */
+    /* USER CODE END LvglTask */
 }
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
 
 /* USER CODE END Application */
-
