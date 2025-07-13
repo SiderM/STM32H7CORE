@@ -54,59 +54,59 @@ uint8_t can_data_msg = 0;
 /* Definitions for debugTask */
 osThreadId_t debugTaskHandle;
 const osThreadAttr_t debugTask_attributes = {
-    .name = "debugTask",
-    .stack_size = 128 * 4,
-    .priority = (osPriority_t) osPriorityNormal,
+  .name = "debugTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for lvglTask */
 osThreadId_t lvglTaskHandle;
 const osThreadAttr_t lvglTask_attributes = {
-    .name = "lvglTask",
-    .stack_size = 2048 * 4,
-    .priority = (osPriority_t) osPriorityNormal1,
+  .name = "lvglTask",
+  .stack_size = 2048 * 4,
+  .priority = (osPriority_t) osPriorityNormal1,
 };
 /* Definitions for backlightTask */
 osThreadId_t backlightTaskHandle;
 const osThreadAttr_t backlightTask_attributes = {
-    .name = "backlightTask",
-    .stack_size = 128 * 4,
-    .priority = (osPriority_t) osPriorityLow,
+  .name = "backlightTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for canRxTask */
 osThreadId_t canRxTaskHandle;
 const osThreadAttr_t canRxTask_attributes = {
-    .name = "canRxTask",
-    .stack_size = 1024 * 4,
-    .priority = (osPriority_t) osPriorityLow,
+  .name = "canRxTask",
+  .stack_size = 1024 * 4,
+  .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for weakTask */
 osThreadId_t weakTaskHandle;
 const osThreadAttr_t weakTask_attributes = {
-    .name = "weakTask",
-    .stack_size = 128 * 4,
-    .priority = (osPriority_t) osPriorityLow,
+  .name = "weakTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for externTask */
 osThreadId_t externTaskHandle;
 const osThreadAttr_t externTask_attributes = {
-    .name = "externTask",
-    .stack_size = 128 * 4,
-    .priority = (osPriority_t) osPriorityLow,
+  .name = "externTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for backlightQueue */
 osMessageQueueId_t backlightQueueHandle;
 const osMessageQueueAttr_t backlightQueue_attributes = {
-    .name = "backlightQueue"
+  .name = "backlightQueue"
 };
 /* Definitions for canRxQueue */
 osMessageQueueId_t canRxQueueHandle;
 const osMessageQueueAttr_t canRxQueue_attributes = {
-    .name = "canRxQueue"
+  .name = "canRxQueue"
 };
 /* Definitions for lvglMutex */
 osMutexId_t lvglMutexHandle;
 const osMutexAttr_t lvglMutex_attributes = {
-    .name = "lvglMutex"
+  .name = "lvglMutex"
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -116,15 +116,10 @@ void my_timer(lv_timer_t *timer);
 /* USER CODE END FunctionPrototypes */
 
 void DebugTask(void *argument);
-
 void LvglTask(void *argument);
-
 void BacklightTask(void *argument);
-
 void CanRxTask(void *argument);
-
 void WeakTask(void *argument);
-
 extern void ExternTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -135,62 +130,63 @@ void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
   * @retval None
   */
 void MX_FREERTOS_Init(void) {
-    /* USER CODE BEGIN Init */
+  /* USER CODE BEGIN Init */
 
-    /* USER CODE END Init */
-    /* Create the mutex(es) */
-    /* creation of lvglMutex */
-    lvglMutexHandle = osMutexNew(&lvglMutex_attributes);
+  /* USER CODE END Init */
+  /* Create the mutex(es) */
+  /* creation of lvglMutex */
+  lvglMutexHandle = osMutexNew(&lvglMutex_attributes);
 
-    /* USER CODE BEGIN RTOS_MUTEX */
+  /* USER CODE BEGIN RTOS_MUTEX */
     /* add mutexes, ... */
-    /* USER CODE END RTOS_MUTEX */
+  /* USER CODE END RTOS_MUTEX */
 
-    /* USER CODE BEGIN RTOS_SEMAPHORES */
+  /* USER CODE BEGIN RTOS_SEMAPHORES */
     /* add semaphores, ... */
-    /* USER CODE END RTOS_SEMAPHORES */
+  /* USER CODE END RTOS_SEMAPHORES */
 
-    /* USER CODE BEGIN RTOS_TIMERS */
+  /* USER CODE BEGIN RTOS_TIMERS */
     /* start timers, add new ones, ... */
-    /* USER CODE END RTOS_TIMERS */
+  /* USER CODE END RTOS_TIMERS */
 
-    /* Create the queue(s) */
-    /* creation of backlightQueue */
-    backlightQueueHandle = osMessageQueueNew(4, sizeof(uint16_t), &backlightQueue_attributes);
+  /* Create the queue(s) */
+  /* creation of backlightQueue */
+  backlightQueueHandle = osMessageQueueNew (4, sizeof(uint16_t), &backlightQueue_attributes);
 
-    /* creation of canRxQueue */
-    canRxQueueHandle = osMessageQueueNew(16, sizeof(CAN_RxMessageTypeDef), &canRxQueue_attributes);
+  /* creation of canRxQueue */
+  canRxQueueHandle = osMessageQueueNew (16, sizeof(CAN_RxMessageTypeDef), &canRxQueue_attributes);
 
-    /* USER CODE BEGIN RTOS_QUEUES */
+  /* USER CODE BEGIN RTOS_QUEUES */
     /* add queues, ... */
-    /* USER CODE END RTOS_QUEUES */
+  /* USER CODE END RTOS_QUEUES */
 
-    /* Create the thread(s) */
-    /* creation of debugTask */
-    debugTaskHandle = osThreadNew(DebugTask, NULL, &debugTask_attributes);
+  /* Create the thread(s) */
+  /* creation of debugTask */
+  debugTaskHandle = osThreadNew(DebugTask, NULL, &debugTask_attributes);
 
-    /* creation of lvglTask */
-    lvglTaskHandle = osThreadNew(LvglTask, NULL, &lvglTask_attributes);
+  /* creation of lvglTask */
+  lvglTaskHandle = osThreadNew(LvglTask, NULL, &lvglTask_attributes);
 
-    /* creation of backlightTask */
-    backlightTaskHandle = osThreadNew(BacklightTask, NULL, &backlightTask_attributes);
+  /* creation of backlightTask */
+  backlightTaskHandle = osThreadNew(BacklightTask, NULL, &backlightTask_attributes);
 
-    /* creation of canRxTask */
-    canRxTaskHandle = osThreadNew(CanRxTask, NULL, &canRxTask_attributes);
+  /* creation of canRxTask */
+  canRxTaskHandle = osThreadNew(CanRxTask, NULL, &canRxTask_attributes);
 
-    /* creation of weakTask */
-    weakTaskHandle = osThreadNew(WeakTask, NULL, &weakTask_attributes);
+  /* creation of weakTask */
+  weakTaskHandle = osThreadNew(WeakTask, NULL, &weakTask_attributes);
 
-    /* creation of externTask */
-    externTaskHandle = osThreadNew(ExternTask, NULL, &externTask_attributes);
+  /* creation of externTask */
+  externTaskHandle = osThreadNew(ExternTask, NULL, &externTask_attributes);
 
-    /* USER CODE BEGIN RTOS_THREADS */
+  /* USER CODE BEGIN RTOS_THREADS */
     /* add threads, ... */
-    /* USER CODE END RTOS_THREADS */
+  /* USER CODE END RTOS_THREADS */
 
-    /* USER CODE BEGIN RTOS_EVENTS */
+  /* USER CODE BEGIN RTOS_EVENTS */
     /* add events, ... */
-    /* USER CODE END RTOS_EVENTS */
+  /* USER CODE END RTOS_EVENTS */
+
 }
 
 /* USER CODE BEGIN Header_DebugTask */
@@ -200,8 +196,9 @@ void MX_FREERTOS_Init(void) {
   * @retval None
   */
 /* USER CODE END Header_DebugTask */
-void DebugTask(void *argument) {
-    /* USER CODE BEGIN DebugTask */
+void DebugTask(void *argument)
+{
+  /* USER CODE BEGIN DebugTask */
     FDCAN_TxHeaderTypeDef TxHeader;
     uint8_t TxBuffer[8];
 
@@ -222,7 +219,7 @@ void DebugTask(void *argument) {
         HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &TxHeader, TxBuffer);
         osDelay(100);
     }
-    /* USER CODE END DebugTask */
+  /* USER CODE END DebugTask */
 }
 
 /* USER CODE BEGIN Header_LvglTask */
@@ -232,8 +229,9 @@ void DebugTask(void *argument) {
 * @retval None
 */
 /* USER CODE END Header_LvglTask */
-void LvglTask(void *argument) {
-    /* USER CODE BEGIN LvglTask */
+void LvglTask(void *argument)
+{
+  /* USER CODE BEGIN LvglTask */
     lv_port_display_init();
     ui_init();
     // lv_timer_t *timer = lv_timer_create(my_timer, 100,  NULL);
@@ -245,7 +243,7 @@ void LvglTask(void *argument) {
         osMutexRelease(lvglMutexHandle);
         osDelay(5);
     }
-    /* USER CODE END LvglTask */
+  /* USER CODE END LvglTask */
 }
 
 /* USER CODE BEGIN Header_BacklightTask */
@@ -255,8 +253,9 @@ void LvglTask(void *argument) {
 * @retval None
 */
 /* USER CODE END Header_BacklightTask */
-void BacklightTask(void *argument) {
-    /* USER CODE BEGIN BacklightTask */
+void BacklightTask(void *argument)
+{
+  /* USER CODE BEGIN BacklightTask */
     uint16_t backlight_level;
     /* Infinite loop */
     for (;;) {
@@ -265,7 +264,7 @@ void BacklightTask(void *argument) {
         }
         osDelay(1);
     }
-    /* USER CODE END BacklightTask */
+  /* USER CODE END BacklightTask */
 }
 
 /* USER CODE BEGIN Header_CanRxTask */
@@ -275,8 +274,9 @@ void BacklightTask(void *argument) {
 * @retval None
 */
 /* USER CODE END Header_CanRxTask */
-void CanRxTask(void *argument) {
-    /* USER CODE BEGIN CanRxTask */
+void CanRxTask(void *argument)
+{
+  /* USER CODE BEGIN CanRxTask */
     CAN_RxMessageTypeDef CAN_RxMessage;
 
     /* Infinite loop */
@@ -294,7 +294,7 @@ void CanRxTask(void *argument) {
         }
         osDelay(1);
     }
-    /* USER CODE END CanRxTask */
+  /* USER CODE END CanRxTask */
 }
 
 /* USER CODE BEGIN Header_WeakTask */
@@ -304,13 +304,14 @@ void CanRxTask(void *argument) {
 * @retval None
 */
 /* USER CODE END Header_WeakTask */
-__weak void WeakTask(void *argument) {
-    /* USER CODE BEGIN WeakTask */
+__weak void WeakTask(void *argument)
+{
+  /* USER CODE BEGIN WeakTask */
     /* Infinite loop */
     for (;;) {
         osDelay(1);
     }
-    /* USER CODE END WeakTask */
+  /* USER CODE END WeakTask */
 }
 
 /* Private application code --------------------------------------------------*/
@@ -345,3 +346,4 @@ void action_set_loading(lv_event_t *e) {
 }
 
 /* USER CODE END Application */
+

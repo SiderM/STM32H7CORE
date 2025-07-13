@@ -23,6 +23,7 @@
 #include "fdcan.h"
 #include "i2c.h"
 #include "ltdc.h"
+#include "quadspi.h"
 #include "tim.h"
 #include "gpio.h"
 #include "fmc.h"
@@ -134,6 +135,7 @@ int main(void)
   MX_DMA2D_Init();
   MX_TIM12_Init();
   MX_FDCAN1_Init();
+  MX_QUADSPI_Init();
   /* USER CODE BEGIN 2 */
     BSP_Init();
     HAL_FDCAN_Start(&hfdcan1);
