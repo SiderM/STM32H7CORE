@@ -26,8 +26,10 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "lv_port_display.h"
-#include "lvgl.h"
 #include "ui.h"
+#include "tim.h"
+#include "actions.h"
+#include "src/themes/lv_theme_private.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -52,21 +54,33 @@
 /* Definitions for debugTask */
 osThreadId_t debugTaskHandle;
 const osThreadAttr_t debugTask_attributes = {
-    .name = "debugTask",
-    .stack_size = 128 * 4,
-    .priority = (osPriority_t) osPriorityNormal,
+  .name = "debugTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for lvglTask */
 osThreadId_t lvglTaskHandle;
 const osThreadAttr_t lvglTask_attributes = {
-    .name = "lvglTask",
-    .stack_size = 2048 * 4,
-    .priority = (osPriority_t) osPriorityNormal1,
+  .name = "lvglTask",
+  .stack_size = 2048 * 4,
+  .priority = (osPriority_t) osPriorityNormal1,
+};
+/* Definitions for backlightTask */
+osThreadId_t backlightTaskHandle;
+const osThreadAttr_t backlightTask_attributes = {
+  .name = "backlightTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for backlightQueue */
+osMessageQueueId_t backlightQueueHandle;
+const osMessageQueueAttr_t backlightQueue_attributes = {
+  .name = "backlightQueue"
 };
 /* Definitions for lvglMutex */
 osMutexId_t lvglMutexHandle;
 const osMutexAttr_t lvglMutex_attributes = {
-    .name = "lvglMutex"
+  .name = "lvglMutex"
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -75,8 +89,8 @@ const osMutexAttr_t lvglMutex_attributes = {
 /* USER CODE END FunctionPrototypes */
 
 void DebugTask(void *argument);
-
 void LvglTask(void *argument);
+void BacklightTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -86,43 +100,51 @@ void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
   * @retval None
   */
 void MX_FREERTOS_Init(void) {
-    /* USER CODE BEGIN Init */
+  /* USER CODE BEGIN Init */
 
-    /* USER CODE END Init */
-    /* Create the mutex(es) */
-    /* creation of lvglMutex */
-    lvglMutexHandle = osMutexNew(&lvglMutex_attributes);
+  /* USER CODE END Init */
+  /* Create the mutex(es) */
+  /* creation of lvglMutex */
+  lvglMutexHandle = osMutexNew(&lvglMutex_attributes);
 
-    /* USER CODE BEGIN RTOS_MUTEX */
+  /* USER CODE BEGIN RTOS_MUTEX */
     /* add mutexes, ... */
-    /* USER CODE END RTOS_MUTEX */
+  /* USER CODE END RTOS_MUTEX */
 
-    /* USER CODE BEGIN RTOS_SEMAPHORES */
+  /* USER CODE BEGIN RTOS_SEMAPHORES */
     /* add semaphores, ... */
-    /* USER CODE END RTOS_SEMAPHORES */
+  /* USER CODE END RTOS_SEMAPHORES */
 
-    /* USER CODE BEGIN RTOS_TIMERS */
+  /* USER CODE BEGIN RTOS_TIMERS */
     /* start timers, add new ones, ... */
-    /* USER CODE END RTOS_TIMERS */
+  /* USER CODE END RTOS_TIMERS */
 
-    /* USER CODE BEGIN RTOS_QUEUES */
+  /* Create the queue(s) */
+  /* creation of backlightQueue */
+  backlightQueueHandle = osMessageQueueNew (4, sizeof(uint16_t), &backlightQueue_attributes);
+
+  /* USER CODE BEGIN RTOS_QUEUES */
     /* add queues, ... */
-    /* USER CODE END RTOS_QUEUES */
+  /* USER CODE END RTOS_QUEUES */
 
-    /* Create the thread(s) */
-    /* creation of debugTask */
-    debugTaskHandle = osThreadNew(DebugTask, NULL, &debugTask_attributes);
+  /* Create the thread(s) */
+  /* creation of debugTask */
+  debugTaskHandle = osThreadNew(DebugTask, NULL, &debugTask_attributes);
 
-    /* creation of lvglTask */
-    lvglTaskHandle = osThreadNew(LvglTask, NULL, &lvglTask_attributes);
+  /* creation of lvglTask */
+  lvglTaskHandle = osThreadNew(LvglTask, NULL, &lvglTask_attributes);
 
-    /* USER CODE BEGIN RTOS_THREADS */
+  /* creation of backlightTask */
+  backlightTaskHandle = osThreadNew(BacklightTask, NULL, &backlightTask_attributes);
+
+  /* USER CODE BEGIN RTOS_THREADS */
     /* add threads, ... */
-    /* USER CODE END RTOS_THREADS */
+  /* USER CODE END RTOS_THREADS */
 
-    /* USER CODE BEGIN RTOS_EVENTS */
+  /* USER CODE BEGIN RTOS_EVENTS */
     /* add events, ... */
-    /* USER CODE END RTOS_EVENTS */
+  /* USER CODE END RTOS_EVENTS */
+
 }
 
 /* USER CODE BEGIN Header_DebugTask */
@@ -132,14 +154,16 @@ void MX_FREERTOS_Init(void) {
   * @retval None
   */
 /* USER CODE END Header_DebugTask */
-void DebugTask(void *argument) {
-    /* USER CODE BEGIN DebugTask */
+void DebugTask(void *argument)
+{
+  /* USER CODE BEGIN DebugTask */
+
     /* Infinite loop */
     for (;;) {
         HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
         osDelay(100);
     }
-    /* USER CODE END DebugTask */
+  /* USER CODE END DebugTask */
 }
 
 /* USER CODE BEGIN Header_LvglTask */
@@ -149,8 +173,9 @@ void DebugTask(void *argument) {
 * @retval None
 */
 /* USER CODE END Header_LvglTask */
-void LvglTask(void *argument) {
-    /* USER CODE BEGIN LvglTask */
+void LvglTask(void *argument)
+{
+  /* USER CODE BEGIN LvglTask */
     lv_port_display_init();
     ui_init();
     /* Infinite loop */
@@ -160,10 +185,51 @@ void LvglTask(void *argument) {
         osMutexRelease(lvglMutexHandle);
         osDelay(5);
     }
-    /* USER CODE END LvglTask */
+  /* USER CODE END LvglTask */
+}
+
+/* USER CODE BEGIN Header_BacklightTask */
+/**
+* @brief Function implementing the backlightTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_BacklightTask */
+void BacklightTask(void *argument)
+{
+  /* USER CODE BEGIN BacklightTask */
+    uint16_t backlight_level;
+    /* Infinite loop */
+    for (;;) {
+        if (osMessageQueueGet(backlightQueueHandle, &backlight_level, 0, osWaitForever) == osOK) {
+            __HAL_TIM_SET_COMPARE(&htim12, TIM_CHANNEL_1, backlight_level);
+        }
+        osDelay(1);
+    }
+  /* USER CODE END BacklightTask */
 }
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
+void action_set_backlight(lv_event_t *e) {
+    lv_obj_t *obj = lv_event_get_target(e);
+    uint16_t backlight = lv_slider_get_value(obj);
+    osMessageQueuePut(backlightQueueHandle, &backlight, 0, osWaitForever);
+}
+
+void action_reset_backlight(lv_event_t *e) {
+    uint16_t backlight = 20;
+    lv_slider_set_value(objects.backlight_slider, backlight, LV_ANIM_OFF);
+    osMessageQueuePut(backlightQueueHandle, &backlight, 0, osWaitForever);
+}
+
+void action_change_theme(lv_event_t *e) {
+    static bool is_dark = false;
+    is_dark = !is_dark;
+    lv_theme_t *theme = lv_theme_default_init(NULL, lv_palette_main(LV_PALETTE_BLUE),
+                                              lv_palette_main(LV_PALETTE_BLUE_GREY), is_dark, &lv_font_montserrat_14);
+    lv_display_set_theme(NULL, theme);
+}
 
 /* USER CODE END Application */
+

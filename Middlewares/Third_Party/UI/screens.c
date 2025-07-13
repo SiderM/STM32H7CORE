@@ -23,9 +23,62 @@ void create_screen_main_screen() {
         lv_obj_t *parent_obj = obj;
         {
             lv_obj_t *obj = lv_label_create(parent_obj);
-            lv_obj_set_pos(obj, 472, 284);
+            lv_obj_set_pos(obj, 449, 284);
             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-            lv_label_set_text(obj, "Text");
+            add_style_label(obj);
+            lv_label_set_text(obj, "Привет, мир!");
+        }
+        {
+            lv_obj_t *obj = lv_button_create(parent_obj);
+            lv_obj_set_pos(obj, 462, 368);
+            lv_obj_set_size(obj, 100, 50);
+            lv_obj_add_event_cb(obj, action_reset_backlight, LV_EVENT_RELEASED, (void *)0);
+            {
+                lv_obj_t *parent_obj = obj;
+                {
+                    lv_obj_t *obj = lv_label_create(parent_obj);
+                    lv_obj_set_pos(obj, 0, 0);
+                    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                    add_style_label(obj);
+                    lv_obj_set_style_align(obj, LV_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_label_set_text(obj, "Нажми!");
+                }
+            }
+        }
+        {
+            lv_obj_t *obj = lv_label_create(parent_obj);
+            lv_obj_set_pos(obj, 435, 23);
+            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+            add_style_label(obj);
+            lv_obj_set_style_text_font(obj, &ui_font_sf_semibold_22, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_label_set_text(obj, "Главный экран");
+        }
+        {
+            // backlight_slider
+            lv_obj_t *obj = lv_slider_create(parent_obj);
+            objects.backlight_slider = obj;
+            lv_obj_set_pos(obj, 332, 164);
+            lv_obj_set_size(obj, 360, 20);
+            lv_slider_set_range(obj, 5, 100);
+            lv_slider_set_value(obj, 20, LV_ANIM_OFF);
+            lv_obj_add_event_cb(obj, action_set_backlight, LV_EVENT_VALUE_CHANGED, (void *)0);
+        }
+        {
+            lv_obj_t *obj = lv_button_create(parent_obj);
+            lv_obj_set_pos(obj, 883, 11);
+            lv_obj_set_size(obj, 100, 50);
+            lv_obj_add_event_cb(obj, action_change_theme, LV_EVENT_RELEASED, (void *)0);
+            {
+                lv_obj_t *parent_obj = obj;
+                {
+                    lv_obj_t *obj = lv_label_create(parent_obj);
+                    lv_obj_set_pos(obj, 0, 0);
+                    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                    add_style_label(obj);
+                    lv_obj_set_style_align(obj, LV_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_label_set_text(obj, "Тема");
+                }
+            }
         }
     }
     

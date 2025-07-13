@@ -9,6 +9,7 @@ extern "C" {
 
 typedef struct _objects_t {
     lv_obj_t *main_screen;
+    lv_obj_t *backlight_slider;
 } objects_t;
 
 extern objects_t objects;

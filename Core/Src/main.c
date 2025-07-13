@@ -20,8 +20,10 @@
 #include "main.h"
 #include "cmsis_os.h"
 #include "dma2d.h"
+#include "fdcan.h"
 #include "i2c.h"
 #include "ltdc.h"
+#include "tim.h"
 #include "gpio.h"
 #include "fmc.h"
 
@@ -108,6 +110,8 @@ int main(void)
   MX_I2C4_Init();
   MX_LTDC_Init();
   MX_DMA2D_Init();
+  MX_TIM12_Init();
+  MX_FDCAN1_Init();
   /* USER CODE BEGIN 2 */
     BSP_Init();
   /* USER CODE END 2 */
@@ -160,7 +164,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLM = 5;
   RCC_OscInitStruct.PLL.PLLN = 192;
   RCC_OscInitStruct.PLL.PLLP = 2;
-  RCC_OscInitStruct.PLL.PLLQ = 2;
+  RCC_OscInitStruct.PLL.PLLQ = 12;
   RCC_OscInitStruct.PLL.PLLR = 2;
   RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_2;
   RCC_OscInitStruct.PLL.PLLVCOSEL = RCC_PLL1VCOWIDE;
@@ -236,7 +240,7 @@ void MPU_Config(void)
 
 /**
   * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM1 interrupt took place, inside
+  * @note   This function is called  when TIM6 interrupt took place, inside
   * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
   * a global variable "uwTick" used as application time base.
   * @param  htim : TIM handle
@@ -247,7 +251,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE BEGIN Callback 0 */
 
   /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM1)
+  if (htim->Instance == TIM6)
   {
     HAL_IncTick();
   }

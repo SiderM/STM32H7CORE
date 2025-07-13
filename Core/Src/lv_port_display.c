@@ -7,6 +7,7 @@
 #include "ltdc.h"
 #include "dma2d.h"
 #include "lvgl.h"
+#include "tim.h"
 
 static void disp_flush_cb(lv_display_t *display, const lv_area_t *area,
                           uint8_t *color_p) {
@@ -41,6 +42,7 @@ static void touch_read_cb(lv_indev_t *indev, lv_indev_data_t *data) {
 void lv_port_display_init(void) {
     lv_init();
     lv_tick_set_cb(HAL_GetTick);
+    HAL_TIM_PWM_Start(&htim12, TIM_CHANNEL_1);
 
     lv_display_t *display1 = lv_display_create(hltdc.LayerCfg[0].ImageWidth,
                                                hltdc.LayerCfg[0].ImageHeight);

@@ -53,6 +53,8 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
         Middlewares/Third_Party/UI/screens.c
         Middlewares/Third_Party/UI/styles.c
         Middlewares/Third_Party/UI/ui.c
+        Middlewares/Third_Party/UI/fonts/ui_font_sf_22.c
+        Middlewares/Third_Party/UI/fonts/ui_font_sf_semibold_22.c
 )
 
 # Add include paths
