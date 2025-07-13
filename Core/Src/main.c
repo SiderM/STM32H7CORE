@@ -53,6 +53,7 @@
 
 /* USER CODE BEGIN PV */
 extern osMessageQueueId_t canRxQueueHandle;
+extern osThreadId_t externTaskHandle;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -79,6 +80,7 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 }
 
 void ExternTask(void const * argument) {
+  osThreadSuspend(externTaskHandle);
   for (;;) {
     HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
     osDelay(500);
