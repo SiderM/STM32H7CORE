@@ -22,7 +22,9 @@ void create_screen_main_screen() {
     {
         lv_obj_t *parent_obj = obj;
         {
+            // label
             lv_obj_t *obj = lv_label_create(parent_obj);
+            objects.label = obj;
             lv_obj_set_pos(obj, 449, 284);
             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
             add_style_label(obj);

@@ -36,7 +36,10 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-
+typedef struct {
+  uint32_t ID;
+  uint8_t Data[8];
+} CAN_RxMessageTypeDef;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
