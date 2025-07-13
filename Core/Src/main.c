@@ -78,6 +78,12 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
     }
 }
 
+void ExternTask(void const * argument) {
+  for (;;) {
+    HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+    osDelay(500);
+  }
+}
 /* USER CODE END 0 */
 
 /**
