@@ -189,6 +189,8 @@ void DebugTask(void *argument) {
     TxHeader.FDFormat = FDCAN_CLASSIC_CAN;
     TxHeader.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
     TxHeader.MessageMarker = 0;
+
+    TxBuffer[0] = 0x00;
     /* Infinite loop */
     for (;;) {
         TxBuffer[0]++;

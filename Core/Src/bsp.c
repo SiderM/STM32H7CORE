@@ -59,7 +59,7 @@ static void GT911_RD_Reg(uint16_t reg, uint8_t *buf, uint8_t len) {
 }
 
 static void BSP_TS_Init(void) {
-    HAL_Delay(300);
+    HAL_Delay(100);
     uint8_t temp[5] = {0};
     HAL_GPIO_WritePin(TS_RST_GPIO_Port, TS_RST_Pin, GPIO_PIN_RESET);
     HAL_GPIO_WritePin(TS_INT_GPIO_Port, TS_INT_Pin, GPIO_PIN_RESET);
