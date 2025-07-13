@@ -76,7 +76,7 @@ const osThreadAttr_t backlightTask_attributes = {
 osThreadId_t canRxTaskHandle;
 const osThreadAttr_t canRxTask_attributes = {
     .name = "canRxTask",
-    .stack_size = 128 * 4,
+    .stack_size = 1024 * 4,
     .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for backlightQueue */
@@ -97,7 +97,8 @@ const osMutexAttr_t lvglMutex_attributes = {
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
-void my_timer(lv_timer_t * timer);
+void my_timer(lv_timer_t *timer);
+
 /* USER CODE END FunctionPrototypes */
 
 void DebugTask(void *argument);
@@ -211,8 +212,8 @@ void LvglTask(void *argument) {
     /* USER CODE BEGIN LvglTask */
     lv_port_display_init();
     ui_init();
-    lv_timer_t *timer = lv_timer_create(my_timer, 100,  NULL);
-    lv_timer_set_repeat_count(timer, -1);
+    // lv_timer_t *timer = lv_timer_create(my_timer, 100,  NULL);
+    // lv_timer_set_repeat_count(timer, -1);
     /* Infinite loop */
     for (;;) {
         osMutexAcquire(lvglMutexHandle, osWaitForever);
@@ -260,6 +261,10 @@ void CanRxTask(void *argument) {
             osMutexAcquire(lvglMutexHandle, osWaitForever);
             HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
             can_data_msg = CAN_RxMessage.Data[0];
+            lv_label_set_text_fmt(objects.label, "%d", can_data_msg);
+            if (can_data_msg == 128) {
+                lv_obj_set_flag(objects.loading, LV_OBJ_FLAG_HIDDEN, true);
+            }
             osMutexRelease(lvglMutexHandle);
         }
         osDelay(1);
@@ -289,9 +294,12 @@ void action_change_theme(lv_event_t *e) {
     lv_display_set_theme(NULL, theme);
 }
 
-void my_timer(lv_timer_t * timer)
-{
+void my_timer(lv_timer_t *timer) {
     lv_label_set_text_fmt(objects.label, "%d", can_data_msg);
+}
+
+void action_set_loading(lv_event_t *e) {
+    lv_obj_set_flag(objects.loading, LV_OBJ_FLAG_HIDDEN, false);
 }
 
 /* USER CODE END Application */

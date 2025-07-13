@@ -11,6 +11,7 @@ typedef struct _objects_t {
     lv_obj_t *main_screen;
     lv_obj_t *label;
     lv_obj_t *backlight_slider;
+    lv_obj_t *loading;
 } objects_t;
 
 extern objects_t objects;

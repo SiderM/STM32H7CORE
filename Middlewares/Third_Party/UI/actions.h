@@ -10,6 +10,7 @@ extern "C" {
 extern void action_set_backlight(lv_event_t * e);
 extern void action_reset_backlight(lv_event_t * e);
 extern void action_change_theme(lv_event_t * e);
+extern void action_set_loading(lv_event_t * e);
 
 
 #ifdef __cplusplus

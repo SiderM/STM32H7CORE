@@ -34,7 +34,7 @@ void create_screen_main_screen() {
             lv_obj_t *obj = lv_button_create(parent_obj);
             lv_obj_set_pos(obj, 462, 368);
             lv_obj_set_size(obj, 100, 50);
-            lv_obj_add_event_cb(obj, action_reset_backlight, LV_EVENT_RELEASED, (void *)0);
+            lv_obj_add_event_cb(obj, action_set_loading, LV_EVENT_RELEASED, (void *)0);
             {
                 lv_obj_t *parent_obj = obj;
                 {
@@ -79,6 +79,39 @@ void create_screen_main_screen() {
                     add_style_label(obj);
                     lv_obj_set_style_align(obj, LV_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
                     lv_label_set_text(obj, "Тема");
+                }
+            }
+        }
+        {
+            // loading
+            lv_obj_t *obj = lv_obj_create(parent_obj);
+            objects.loading = obj;
+            lv_obj_set_pos(obj, 362, 254);
+            lv_obj_set_size(obj, 300, 200);
+            lv_obj_set_style_pad_left(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_pad_top(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_pad_right(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_pad_bottom(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_bg_opa(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_border_width(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_radius(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_add_flag(obj, LV_OBJ_FLAG_HIDDEN);
+            lv_obj_clear_flag(obj, LV_OBJ_FLAG_CLICKABLE);
+            {
+                lv_obj_t *parent_obj = obj;
+                {
+                    lv_obj_t *obj = lv_obj_create(parent_obj);
+                    lv_obj_set_pos(obj, 0, 0);
+                    lv_obj_set_size(obj, 300, 200);
+                    {
+                        lv_obj_t *parent_obj = obj;
+                        {
+                            lv_obj_t *obj = lv_spinner_create(parent_obj);
+                            lv_obj_set_pos(obj, 88, 38);
+                            lv_obj_set_size(obj, 80, 80);
+                            lv_spinner_set_anim_params(obj, 1000, 60);
+                        }
+                    }
                 }
             }
         }
